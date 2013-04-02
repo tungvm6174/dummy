@@ -29,7 +29,7 @@
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.10</version>
       </plugin>
-      <!--export MAVEN_OPTS="-javaagent:/home/tungvm/jrebel/jrebel.jar $MAVEN_OPTS"-->
+      <!-- export MAVEN_OPTS="-javaagent:/home/tungvm/jrebel/jrebel.jar $MAVEN_OPTS" -->
       <plugin>
         <groupId>org.zeroturnaround</groupId>
         <artifactId>jrebel-maven-plugin</artifactId>
@@ -42,6 +42,20 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <!-- mvn antrun:run -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.5</version>
+        <configuration>
+          <target>
+            <property name="test_classpath" refid="maven.test.classpath"/>
+            <echo message="hello ant, from Maven!"/>
+            <echo>Maybe this will work?</echo>
+            <echo message="test classpath: ${test_classpath}"/>
+          </target>
+        </configuration>
       </plugin>
     </plugins>      
   </build>
