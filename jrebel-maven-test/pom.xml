@@ -29,6 +29,20 @@
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.10</version>
       </plugin>
+      <!--export MAVEN_OPTS="-javaagent:/home/tungvm/jrebel/jrebel.jar $MAVEN_OPTS"-->
+      <plugin>
+        <groupId>org.zeroturnaround</groupId>
+        <artifactId>jrebel-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-rebel-xml</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>      
   </build>
 </project>
