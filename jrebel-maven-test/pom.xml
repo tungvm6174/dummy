@@ -7,20 +7,48 @@
   <version>1.0-SNAPSHOT</version>
   <name>jrebel-maven-test Maven Webapp</name>
   <url>http://maven.apache.org</url>
+
+  <properties>
+    <spring.version>3.0.5.RELEASE</spring.version>
+    <junit.version>4.11</junit.version>
+    <jdk.version>1.6</jdk.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>3.0.1</version>
-        <scope>provided</scope>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
     </dependency>
+    <!-- Spring 3 dependencies -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+
   </dependencies>
+
   <build>
     <finalName>jrebel-maven-test</finalName>
     <plugins>
@@ -28,8 +56,34 @@
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.10</version>
+        <!-- -Djetty.port=<port> -->
+        <!-- <configuration>
+          <connectors>
+            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+              <port>8081</port>
+            </connector>
+          </connectors>
+          <stopPort>18080</stopPort>
+        </configuration> -->
       </plugin>
-      <!-- export MAVEN_OPTS="-javaagent:/home/tungvm/jrebel/jrebel.jar $MAVEN_OPTS" -->
+      
+      <!-- Jmx 
+      JMX_OPTS="-Dcom.sun.management.jmxremote \
+                -Dcom.sun.management.jmxremote.port=9004 \
+                -Dcom.sun.management.jmxremote.ssl=false \
+                -Dcom.sun.management.jmxremote.authenticate=false \
+                -Djava.rmi.server.hostname=192.168.1.103"      
+      -->
+      
+      <!-- Maven debug
+      export MAVEN_OPTS="$MAVEN_OPTS -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"       
+      -->
+      
+      <!-- JRebel
+      //export MAVEN_OPTS="-javaagent:/home/tungvm/jrebel/jrebel.jar $MAVEN_OPTS"
+      JREBEL_OPTS="-javaagent:/home/tungvm/jrebel/jrebel.jar"
+      export JAVA_OPTS="$JAVA_OPTS -D- -enable_all_permissions=true $JREBEL_OPTS"
+      -->     
       <plugin>
         <groupId>org.zeroturnaround</groupId>
         <artifactId>jrebel-maven-plugin</artifactId>
@@ -43,6 +97,7 @@
           </execution>
         </executions>
       </plugin>
+      
       <!-- mvn antrun:run -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -50,13 +105,35 @@
         <version>1.5</version>
         <configuration>
           <target>
-            <property name="test_classpath" refid="maven.test.classpath"/>
-            <echo message="hello ant, from Maven!"/>
+            <property name="test_classpath" refid="maven.test.classpath" />
+            <echo message="hello ant, from Maven!" />
             <echo>Maybe this will work?</echo>
-            <echo message="test classpath: ${test_classpath}"/>
+            <!-- <echo message="test classpath: ${test_classpath}"/> -->
+            <echo>env.JAVA_HOME = ${env.JAVA_HOME}</echo>
           </target>
         </configuration>
       </plugin>
-    </plugins>      
+
+      <!-- <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
+          <executable>${env.JAVA_HOME}/bin/javac</executable>
+          <fork>true</fork>
+        </configuration>
+      </plugin> -->
+
+      <!-- <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <jvm>${env.JAVA_HOME}/bin/java</jvm>
+        </configuration>
+      </plugin> -->
+
+    </plugins>
   </build>
 </project>
